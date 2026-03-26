@@ -12,10 +12,10 @@ export class ScrapProductsService {
 
     try {
       const response = await axios.post<ScrapProductDto>(
-        'http://localhost:4001/scrap',
+        `${process.env.SCRAPPER_URL}/scrap`,
         { url },
         {
-          timeout: 10_000,
+          timeout: 10000,
         },
       );
 
