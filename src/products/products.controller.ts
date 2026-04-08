@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './services/products.service';
 import type { UpdateProductDto } from './schemas/update-product.schema';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import {
   type CreateProductDto,
   createProductSchema,
