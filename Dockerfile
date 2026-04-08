@@ -17,8 +17,6 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN npx prisma generate
-
 RUN pnpm build
 
 # ---------- Production ----------
@@ -35,8 +33,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
-
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/src/generated ./src/generated
 
 EXPOSE 3000
 
