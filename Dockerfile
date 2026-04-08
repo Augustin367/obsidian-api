@@ -38,4 +38,4 @@ COPY --from=builder /app/src/generated ./src/generated
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/main.js"]
