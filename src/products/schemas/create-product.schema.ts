@@ -1,12 +1,6 @@
 import z from 'zod';
-import { baseProductSchema } from './base-product.schema';
+import { productSchema } from './product.schema';
 
-export const createProductSchema = baseProductSchema.refine(
-  (data) => data.type !== 'SMARTPHONE' || !!data.memory,
-  {
-    message: 'memory is required when type is SMARTPHONE',
-    path: ['memory'],
-  },
-);
+export const createProductSchema = productSchema;
 
-export type CreateProductDto = z.infer<typeof createProductSchema>;
+export type CreateProductType = z.infer<typeof createProductSchema>;

@@ -13,35 +13,48 @@ model User {
   clerkId   String?   @unique
   email     String    @unique
   name      String?
+  role      Role      @default(USER)
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  role      Role      @default(USER)
-  products  Product[]
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  userId      String
-  title       String
-  description String?
-  color       String?
-  brand       String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  imageUrl    String?
-  price       Float
-  sourceUrl   String      @unique
-  user        User        @relation(fields: [userId], references: [id])
-  smartPhone  SmartPhone?
-}
+  id            String      @id @default(cuid())
 
-model SmartPhone {
-  id        String   @id @default(cuid())
-  memory    String
-  productId String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product  @relation(fields: [productId], references: [id])
+  title         String
+  description   String?
+
+  brand         ProductBrand?
+  category      ProductCategory?
+  family        String?
+  model         String?
+  
+  color         String?
+  ram           String?
+  storage       String?
+
+  imageUrl      String?
+  images        String[] @default([])
+
+  originalPrice Decimal  @db.Decimal(10,2)
+  profit        Decimal  @default(0) @db.Decimal(10,2)
+  salePrice     Decimal  @db.Decimal(10,2)
+
+  sourceUrl     String
+  sourceHash    String   @unique
+  source        ProductSource
+
+  metadata      Json?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([brand])
+  @@index([source])
+  @@index([family])
+  @@index([category])
+  @@index([createdAt])
 }
 
 enum Role {
@@ -49,7 +62,22 @@ enum Role {
   ADMIN
 }
 
-enum ProductType {
-  GENERIC
+enum ProductBrand {
+  APPLE
+  SAMSUNG
+}
+
+enum ProductCategory {
+  TABLET
+  NOTEBOOK
+  HEADPHONE
+  ACCESSORY
   SMARTPHONE
+  SMARTWATCH
+}
+
+enum ProductSource {
+  AMAZON
+  SHOPEE
+  MERCADOLIVRE
 }

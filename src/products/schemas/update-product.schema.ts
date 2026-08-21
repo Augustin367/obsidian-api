@@ -1,6 +1,6 @@
 import z from 'zod';
-import { baseProductSchema } from './base-product.schema';
+import { productSchema } from './product.schema';
 
-export const UpdateProductSchema = baseProductSchema.partial();
+export const UpdateProductSchema = productSchema.partial();
 
-export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
+export type UpdateProductInput = z.infer<typeof UpdateProductSchema>;

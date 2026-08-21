@@ -8,38 +8,35 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductsService } from './services/products.service';
-import type { UpdateProductDto } from './schemas/update-product.schema';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import {
-  type CreateProductDto,
+  type CreateProductType,
   createProductSchema,
 } from './schemas/create-product.schema';
-import { UpdateProductSchema } from './schemas/update-product.schema';
-import { ScrapProductsService } from './services/scrap-products.service';
-import z from 'zod';
+import {
+  UpdateProductSchema,
+  type UpdateProductInput,
+} from './schemas/update-product.schema';
+import { urlSchema, type UrlInput } from '../scrappers/schemas/url.schema';
+import { ScrappersService } from '../scrappers/services/scrappers.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(
-    private readonly productsService: ProductsService,
-    private readonly scrapProductsService: ScrapProductsService,
-  ) {}
+  constructor(private readonly productsService: ProductsService) {}
 
   @Post('scrap')
-  async createByScrap(
-    @Body(new ZodValidationPipe(z.object({ url: z.string().url() })))
-    body: {
-      url: string;
-    },
-  ) {
-    return this.scrapProductsService.execute(body.url);
+  scrap(@Body(new ZodValidationPipe(urlSchema)) body: UrlInput) {
+    return this.productsService.scrap(body.url);
   }
 
   @Post()
   create(
     @Body(new ZodValidationPipe(createProductSchema))
-    dto: CreateProductDto,
+    dto: CreateProductType,
   ) {
+    console.log('DTO RECEBIDO:');
+    console.dir(dto, { depth: null });
+
     return this.productsService.create(dto);
   }
 
@@ -57,7 +54,7 @@ export class ProductsController {
   update(
     @Param('id') id: string,
     @Body(new ZodValidationPipe(UpdateProductSchema))
-    dto: UpdateProductDto,
+    dto: UpdateProductInput,
   ) {
     return this.productsService.update(id, dto);
   }
